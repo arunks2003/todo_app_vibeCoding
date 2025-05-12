@@ -64,7 +64,7 @@ export default function TodoApp() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-200 dark:from-black dark:to-gray-900 transition-colors">
-      <div className="w-full max-w-md bg-white/90 dark:bg-gray-900/80 rounded-2xl shadow-xl p-8 flex flex-col gap-6 border border-gray-200 dark:border-gray-800">
+      <div className="w-full max-w-md bg-white/90 dark:bg-gray-900/80 rounded-2xl shadow-xl p-4 sm:p-8 flex flex-col gap-4 sm:gap-6 border border-gray-200 dark:border-gray-800">
         <h1 className="text-3xl font-bold text-center text-gray-900 dark:text-gray-100 mb-2">
           Todo App
         </h1>
@@ -72,7 +72,7 @@ export default function TodoApp() {
           <input
             ref={inputRef}
             type="text"
-            className="flex-1 rounded-lg border border-gray-300 dark:border-gray-700 px-4 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 transition"
+            className="flex-1 rounded-lg border border-gray-300 dark:border-gray-700 px-3 py-2 text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 transition"
             placeholder="What needs to be done?"
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -81,7 +81,7 @@ export default function TodoApp() {
           />
           <button
             onClick={addTodo}
-            className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 flex items-center gap-1 transition disabled:opacity-50"
+            className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-3 py-2 flex items-center gap-1 transition disabled:opacity-50"
             disabled={!input.trim()}
             aria-label="Add todo"
           >
@@ -130,7 +130,7 @@ export default function TodoApp() {
                 />
               ) : (
                 <span
-                  className={`flex-1 text-lg cursor-pointer select-text ${
+                  className={`flex-1 text-base sm:text-lg cursor-pointer select-text ${
                     todo.completed
                       ? "text-gray-400 dark:text-gray-500"
                       : "text-gray-900 dark:text-gray-100"
