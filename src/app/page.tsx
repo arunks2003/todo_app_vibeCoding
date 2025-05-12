@@ -147,14 +147,14 @@ export default function TodoApp() {
               )}
               <button
                 onClick={() => startEdit(todo.id, todo.text)}
-                className="opacity-0 group-hover:opacity-100 transition text-blue-500 hover:text-blue-700 focus:opacity-100"
+                className="opacity-50 group-hover:opacity-100 transition text-blue-500 hover:text-blue-700 focus:opacity-100"
                 aria-label="Edit todo"
               >
                 <PencilIcon className="w-5 h-5" />
               </button>
               <button
                 onClick={() => deleteTodo(todo.id)}
-                className="opacity-0 group-hover:opacity-100 transition text-red-500 hover:text-red-700 focus:opacity-100"
+                className="opacity-60 group-hover:opacity-100 transition text-red-500 hover:text-red-700 focus:opacity-100"
                 aria-label="Delete todo"
               >
                 <TrashIcon className="w-5 h-5" />
