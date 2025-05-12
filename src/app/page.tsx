@@ -1,103 +1,172 @@
-import Image from "next/image";
+"use client";
+import { useState, useRef } from "react";
+import {
+  CheckIcon,
+  PencilIcon,
+  TrashIcon,
+  PlusIcon,
+} from "@heroicons/react/24/outline";
 
-export default function Home() {
+interface Todo {
+  id: number;
+  text: string;
+  completed: boolean;
+}
+
+export default function TodoApp() {
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [input, setInput] = useState("");
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingText, setEditingText] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const addTodo = () => {
+    if (input.trim()) {
+      setTodos([
+        { id: Date.now(), text: input.trim(), completed: false },
+        ...todos,
+      ]);
+      setInput("");
+      inputRef.current?.focus();
+    }
+  };
+
+  const toggleTodo = (id: number) => {
+    setTodos((todos) =>
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
+  };
+
+  const deleteTodo = (id: number) => {
+    setTodos((todos) => todos.filter((todo) => todo.id !== id));
+  };
+
+  const startEdit = (id: number, text: string) => {
+    setEditingId(id);
+    setEditingText(text);
+  };
+
+  const saveEdit = (id: number) => {
+    setTodos((todos) =>
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, text: editingText } : todo
+      )
+    );
+    setEditingId(null);
+    setEditingText("");
+  };
+
+  const handleInputKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") addTodo();
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-200 dark:from-black dark:to-gray-900 transition-colors">
+      <div className="w-full max-w-md bg-white/90 dark:bg-gray-900/80 rounded-2xl shadow-xl p-8 flex flex-col gap-6 border border-gray-200 dark:border-gray-800">
+        <h1 className="text-3xl font-bold text-center text-gray-900 dark:text-gray-100 mb-2">
+          Todo App
+        </h1>
+        <div className="flex gap-2">
+          <input
+            ref={inputRef}
+            type="text"
+            className="flex-1 rounded-lg border border-gray-300 dark:border-gray-700 px-4 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 transition"
+            placeholder="What needs to be done?"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleInputKey}
+            aria-label="Add todo"
+          />
+          <button
+            onClick={addTodo}
+            className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 flex items-center gap-1 transition disabled:opacity-50"
+            disabled={!input.trim()}
+            aria-label="Add todo"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            <PlusIcon className="w-5 h-5" />
+            <span className="hidden sm:inline">Add</span>
+          </button>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <ul className="flex flex-col gap-2 mt-2">
+          {todos.length === 0 && (
+            <li className="text-center text-gray-400 dark:text-gray-500">
+              No todos yet. Add one!
+            </li>
+          )}
+          {todos.map((todo) => (
+            <li
+              key={todo.id}
+              className={`group flex items-center gap-3 px-3 py-2 rounded-lg transition bg-gray-100 dark:bg-gray-800 border border-transparent hover:border-blue-400 dark:hover:border-blue-500 ${
+                todo.completed ? "opacity-60 line-through" : ""
+              }`}
+            >
+              <button
+                onClick={() => toggleTodo(todo.id)}
+                className={`w-6 h-6 flex items-center justify-center rounded-full border-2 transition focus:outline-none focus:ring-2 focus:ring-blue-400 ${
+                  todo.completed
+                    ? "bg-blue-600 border-blue-600"
+                    : "border-gray-400 dark:border-gray-600"
+                }`}
+                aria-label={
+                  todo.completed ? "Mark as incomplete" : "Mark as complete"
+                }
+              >
+                {todo.completed && <CheckIcon className="w-4 h-4 text-white" />}
+              </button>
+              {editingId === todo.id ? (
+                <input
+                  className="flex-1 rounded px-2 py-1 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  value={editingText}
+                  onChange={(e) => setEditingText(e.target.value)}
+                  onBlur={() => saveEdit(todo.id)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") saveEdit(todo.id);
+                    if (e.key === "Escape") setEditingId(null);
+                  }}
+                  autoFocus
+                  aria-label="Edit todo"
+                />
+              ) : (
+                <span
+                  className={`flex-1 text-lg cursor-pointer select-text ${
+                    todo.completed
+                      ? "text-gray-400 dark:text-gray-500"
+                      : "text-gray-900 dark:text-gray-100"
+                  }`}
+                  onDoubleClick={() => startEdit(todo.id, todo.text)}
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") startEdit(todo.id, todo.text);
+                  }}
+                  aria-label={todo.text}
+                >
+                  {todo.text}
+                </span>
+              )}
+              <button
+                onClick={() => startEdit(todo.id, todo.text)}
+                className="opacity-0 group-hover:opacity-100 transition text-blue-500 hover:text-blue-700 focus:opacity-100"
+                aria-label="Edit todo"
+              >
+                <PencilIcon className="w-5 h-5" />
+              </button>
+              <button
+                onClick={() => deleteTodo(todo.id)}
+                className="opacity-0 group-hover:opacity-100 transition text-red-500 hover:text-red-700 focus:opacity-100"
+                aria-label="Delete todo"
+              >
+                <TrashIcon className="w-5 h-5" />
+              </button>
+            </li>
+          ))}
+        </ul>
+        <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-2">
+          <span>{todos.filter((t) => !t.completed).length} left</span>
+          <span>{todos.length} total</span>
+        </div>
+      </div>
     </div>
   );
 }
